@@ -1,0 +1,57 @@
+function createGameBall(obj)
+    love.graphics.setColor(obj.color[1], obj.color[2], obj.color[3])
+    love.graphics.rectangle("fill", obj.x, obj.y, obj.width, obj.height)
+end
+
+function createBall(widthScreen, heightScreen)
+    widthBall = widthScreen/20
+    heightBall = widthBall
+    positionX = player.x + (player.width)/2 - widthBall/2
+    positionY = player.y - heightBall
+
+    bola = ball(positionX, positionY, widthBall, heightBall)
+
+   return bola
+end
+
+function ball(positionX, positionY, widthBall, heightBall)
+    bola = {
+        x = positionX,
+        y = positionY,
+        width = widthBall,
+        height = heightBall,
+        color = {1, 1, 0}
+    }
+
+    return bola
+end
+
+
+function createGamePlayer(obj)
+    love.graphics.setColor(obj.color[1], obj.color[2], obj.color[3])
+    love.graphics.rectangle("fill", obj.x, obj.y, obj.width, obj.height)
+end
+
+function createPlayer(widthScreen, heightScreen)
+    baseWidth = widthScreen/5
+    baseHeight = heightScreen/20
+
+    positionX = (widthScreen/2)-(baseWidth/2)
+    positionY = heightScreen-baseHeight
+
+    base = player(baseWidth, baseHeight, positionX, positionY)
+
+    return base
+end
+
+function player(baseWidth, baseHeight, positionX, positionY)
+    player = {
+        x = positionX,
+        y = positionY,
+        width = baseWidth,
+        height = baseHeight,
+        color = {1, 1, 1}
+    }
+
+    return player
+end
