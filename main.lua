@@ -10,11 +10,15 @@ playerClass = require 'player'
 blockClass = require 'block'
 
 function love.load()
+    smallFont = love.graphics.newFont('font.ttf', 8)
+    largeFont = love.graphics.newFont('font.ttf', 16)
+    scoreFont = love.graphics.newFont('font.ttf', 32)
+
     widthScreen = love.graphics.getWidth( ) --LarguraTela
     heightScreen = love.graphics.getHeight( ) --AlturaTela
 
-    blockQtd = 9
-    lineQtd = 6
+    blockQtd = 5
+    lineQtd = 5
 
     positionLineX = 0
     positionLineY = 0
@@ -23,6 +27,7 @@ function love.load()
     spdBall = widthScreen * 0.01
 
     startGame = false
+    win = false
 
     i = 1
 
@@ -40,11 +45,14 @@ function love.draw()
     createGameBlocks(gameBlocks)
     createGamePlayer(player)
     createGameBall(ball)
+    createWinGame()
+    createStartGame()
 end
 
 function love.update(dt)
     runGame()
     runBall()
+    winGame()
 end
 
 function runGame()
@@ -54,22 +62,74 @@ function runGame()
     if love.keyboard.isDown('space') then
         startGame = true
     end
+    if love.keyboard.isDown('kpenter') then
+        win = false
+        reset()
+    end
 
     resetGame()
 end
 
 function resetGame()
     if ((ball.y) >= heightScreen) then
-        startGame = false
+       reset()
+    end
+end
+
+function createWinGame()
+    if (win) then
         up = false
         down = false
         left = false
         right = false
-
-        gameBlocks = createLines(lineQtd, blockQtd, widthScreen, heightScreen, positionLineX, positionLineY)
-
+        spdBall = 0
+        
         player.x = (widthScreen/2)-(baseWidth/2)
         ball.x = player.x + (player.width)/2 - widthBall/2
         ball.y = player.y - ball.height
+
+        love.graphics.setFont(scoreFont)
+        love.graphics.print('Win', (widthScreen/2)-((widthScreen*0.1)/2), (heightScreen/2))
+        love.graphics.setFont(largeFont)
+        love.graphics.print('press enter to reset', (widthScreen/2)-((widthScreen*0.325)/2), (heightScreen/2+50))
     end
+end
+
+function createStartGame()
+    --love.graphics.setFont(scoreFont)
+    --love.graphics.print('Win', (widthScreen/2)-((widthScreen*0.1)/2), (heightScreen/2))
+    if(startGame ~= true)then
+        love.graphics.setFont(largeFont)
+        love.graphics.print('press space to start', (widthScreen/2)-((widthScreen*0.325)/2), (heightScreen/2+50))
+    end
+end
+
+function winGame()
+    contBlocks = 0
+    for chave, valor in pairs(gameBlocks) do
+        for key, value in pairs(valor) do
+            contBlocks = contBlocks +1
+        end
+    end
+
+    if(contBlocks == 0) then
+        win = true
+    end
+end
+
+function reset()
+    startGame = false
+
+    spdBall = widthScreen * 0.01
+
+    up = false
+    down = false
+    left = false
+    right = false
+
+    gameBlocks = createLines(lineQtd, blockQtd, widthScreen, heightScreen, positionLineX, positionLineY)
+
+    player.x = (widthScreen/2)-(baseWidth/2)
+    ball.x = player.x + (player.width)/2 - widthBall/2
+    ball.y = player.y - ball.height +1
 end

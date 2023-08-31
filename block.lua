@@ -21,9 +21,9 @@ function createGameBlocks(obj)
 ]]
 for chave, valor in pairs(obj) do
     for key, value in pairs(valor) do
-        print('block = '.. key)
-        print('x = '..value.x)
-        print('y = '..value.y)
+        -- print('block = '.. key)
+        -- print('x = '..value.x)
+        -- print('y = '..value.y)
 
         love.graphics.setColor(value.color[1], value.color[2], value.color[3])
         love.graphics.rectangle("fill", value.x, value.y, value.width, value.height)

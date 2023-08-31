@@ -7,7 +7,7 @@ function createBall(widthScreen, heightScreen, player, positionX, positionY)
     widthBall = widthScreen/20
     heightBall = widthBall
     positionX = player.x + (player.width)/2 - widthBall/2
-    positionY = player.y - heightBall
+    positionY = player.y - heightBall +1
 
     bola = ball(positionX, positionY, widthBall, heightBall)
 
@@ -66,7 +66,8 @@ end
 
 function colidePlayer()
     if startGame then
-        if (ball.y + ball.height) >= (player.y) and ((ball.x + ball.width) >= player.x and (ball.x + ball.width) <= (player.x + player.width)) then
+        colide = colisaoPlayer()
+        if (colide) then
             up = true
             down = false
     
@@ -81,6 +82,17 @@ function colidePlayer()
     end
 end
 
+function colisaoPlayer()
+    if ball.x + ball.width <= player.x or
+        ball.x >= player.x + player.width then
+            return false
+    end
+    if ball.y + ball.height <= player.y or
+        ball.y >= player.y + player.height then
+            return false
+    end
+    return true
+end
 
 function ball(positionX, positionY, widthBall, heightBall)
     bola = {
@@ -112,41 +124,48 @@ function randonDirection()
     return love.math.random(0,1)
 end
 
-function runBall()
-    colideArea()
-    colidePlayer()
-    ballMovement()  
-
+function blockBreaker()
     if (startGame) then
+        col = false
         for chave, linha in pairs(gameBlocks) do
             for i = #linha, 1, -1 do
                 if (colideBlocks(linha[i])) then
-                    if (down) then
-                        up = true
-                        down = false
-                
-                        if (randonDirection() == 0) then
-                            left = true
-                            right = false
-                        else
-                            right = true
-                            left = false
-                        end
-                    else
-                        up = false
-                        down = true
-                
-                        if (randonDirection() == 0) then
-                            left = true
-                            right = false
-                        else
-                            right = true
-                            left = false
-                        end
-                    end
                     table.remove(linha, i)
+                    col = true
+                end
+            end
+        end
+        if (col) then
+            if (down) then
+                up = true
+                down = false
+        
+                if (randonDirection() == 0) then
+                    left = true
+                    right = false
+                else
+                    right = true
+                    left = false
+                end
+            else
+                up = false
+                down = true
+        
+                if (randonDirection() == 0) then
+                    left = true
+                    right = false
+                else
+                    right = true
+                    left = false
                 end
             end
         end
     end
+end
+
+function runBall()
+    colideArea()
+    colidePlayer()
+    ballMovement()  
+    blockBreaker()
 end
