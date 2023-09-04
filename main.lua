@@ -14,10 +14,12 @@ function love.load()
     largeFont = love.graphics.newFont('font.ttf', 16)
     scoreFont = love.graphics.newFont('font.ttf', 32)
 
+    sfxmusic = love.audio.newSource("background.mp3", "stream")
+
     widthScreen = love.graphics.getWidth( ) --LarguraTela
     heightScreen = love.graphics.getHeight( ) --AlturaTela
 
-    blockQtd = 5
+    blockQtd = 1
     lineQtd = 5
 
     positionLineX = 0
@@ -61,6 +63,9 @@ function runGame()
     end
     if love.keyboard.isDown('space') then
         startGame = true
+        if not sfxmusic:isPlaying( ) then
+            love.audio.play( sfxmusic )
+        end
     end
     if love.keyboard.isDown('kpenter') then
         win = false
@@ -114,10 +119,18 @@ function winGame()
 
     if(contBlocks == 0) then
         win = true
+
+        if sfxmusic:isPlaying( ) then
+            love.audio.stop( sfxmusic )
+        end
     end
 end
 
 function reset()
+    if sfxmusic:isPlaying( ) then
+        love.audio.stop( sfxmusic )
+    end
+
     startGame = false
 
     spdBall = widthScreen * 0.01
